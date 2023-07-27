@@ -1,0 +1,58 @@
+<section>
+    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <mat-form-field appearance="fill">
+            <mat-label>Your email</mat-label>
+            <input 
+                type="email" 
+                name="email" 
+                placeholder="Your email" 
+                matInput 
+                ngModel
+                email
+                required
+                >
+            <mat-error>Email invalid</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" hintLabel="Should be at least 6 characters long">
+            <mat-label>Your password</mat-label>
+            <input 
+                type="password" 
+                name="password" 
+                placeholder="Your password" 
+                matInput 
+                ngModel
+                required
+                minlength="6"
+                #passInput 
+                >
+            <mat-hint align="end">{{passInput.value.length}} / 6</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Your birthday</mat-label>
+            <input type="text" 
+            placeholder="Your birthday" 
+            name="birthday"
+            required
+            matInput 
+            ngModel
+            [matDatepicker]="picker"
+            [max]="maxDate"
+            >
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-checkbox ngModel name="agree" required color="primary">Agree to terms and Conditions</mat-checkbox>
+        
+        <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Submit</button>
+    </form>
+</section>
+
+<!-- For template driven approach:
+a) Add FormsModule to appModule
+b) Add ngModel attribute to controls in the form
+c) Add name attribute to controls in the form
+d) Add local reference in the form tag and set value ngForm
+e) Add onSubmit button passing the local reference to it -->

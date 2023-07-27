@@ -1,0 +1,30 @@
+<section>
+    <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+            <mat-label>Your email</mat-label>
+            <input 
+                type="email"  
+                placeholder="Your email" 
+                matInput
+                formControlName="email" 
+                >
+            <mat-error>Email invalid</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" hintLabel="Should be at least 6 characters long">
+            <mat-label>Your password</mat-label>
+            <input 
+                type="password"  
+                placeholder="Your password" 
+                matInput
+                #passInput
+                formControlName="password" 
+                >
+            <mat-hint align="end">{{passInput.value.length}} / 6</mat-hint>
+        </mat-form-field>
+
+        
+        
+        <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Login</button>
+    </form>
+</section>

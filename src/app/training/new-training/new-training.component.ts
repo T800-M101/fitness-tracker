@@ -1,21 +1,33 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-new-training',
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit {
+export class NewTrainingComponent implements OnInit, OnDestroy {
   
   exercises!: Exercise[];
-  
-  constructor(private trainingService: TrainingService) {}
+  exerciseSubscription$!: Subscription;
 
+
+  constructor(private trainingService: TrainingService) {}
+  
   ngOnInit(): void {
-    this.exercises = this.trainingService.getAvailableExercises();
+    this.trainingService.fetchAvailableExercises();
+    this.exerciseSubscription$ = this.trainingService.getAvailableExercises()
+    .subscribe((exercises: any) => {
+      this.exercises = exercises;
+    });
+  }
+  
+  ngOnDestroy(): void {
+    this.exerciseSubscription$.unsubscribe();
   }
 
   onStartTraining(form: NgForm): void {

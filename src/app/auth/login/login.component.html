@@ -22,9 +22,14 @@
                 >
             <mat-hint align="end">{{passInput.value.length}} / 6</mat-hint>
         </mat-form-field>
-
-        
-        
-        <button type="submit" mat-raised-button color="primary" [disabled]="!form.valid">Login</button>
+        <button 
+            type="submit" 
+            mat-raised-button 
+            color="primary" 
+            [disabled]="!form.valid" 
+            *ngIf="!isLoading" 
+        > Login
+        </button>
+        <mat-spinner *ngIf="isLoading"></mat-spinner>
     </form>
 </section>

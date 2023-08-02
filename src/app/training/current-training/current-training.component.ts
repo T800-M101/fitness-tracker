@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./current-training.component.css']
 })
 export class CurrentTrainingComponent implements OnInit {
-  selectedExercise!: Exercise | null
+  selectedExercise!: Exercise | null;
   progress = 0;
   timer!: any;
  
@@ -45,7 +45,6 @@ export class CurrentTrainingComponent implements OnInit {
     dialogRef.afterClosed().subscribe( result => {
       if(result){
         this.trainingService.cancelExercise(this.progress);
-        this.router.navigate(['training']);
       } else {
         this.startOrResumeTimer();
       }

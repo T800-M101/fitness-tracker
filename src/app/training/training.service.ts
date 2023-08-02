@@ -3,10 +3,11 @@ import { map } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Exercise } from "./exercise.model";
 import { Injectable } from "@angular/core";
+import { UIService } from "../shared/ui.service";
 
 @Injectable()
 export class TrainingService { 
-    private exerciseChanged$ = new Subject<Exercise>();
+    private exerciseChanged$ = new Subject<Exercise | null>();
     private exercisesChanged$ = new Subject<Exercise[]>();
     private finishedExercisesChanged$ = new Subject<Exercise[]>();
 
@@ -14,7 +15,7 @@ export class TrainingService {
     private runningExercise!: Exercise;
     private fbSubscription: Subscription[] = [];
 
-    constructor(private db: AngularFirestore){}
+    constructor(private db: AngularFirestore, private uiService: UIService){}
     
     fetchAvailableExercises() {
         this.fbSubscription.push(this.db
@@ -30,12 +31,22 @@ export class TrainingService {
                     }
                 });
             }))
-            .subscribe((exercises: Exercise[]) => {
-                this.availableExercises = exercises;
-                this.exercisesChanged$.next([...this.availableExercises]);
+            .subscribe({
+                next: (exercises: Exercise[]) => {
+                    this.availableExercises = exercises;
+                    this.exercisesChanged$.next([...this.availableExercises]);
+                },
+                error: () => {
+                    this.uiService.loadingStateChanged$.next(false);
+                    this.uiService.showSnackBar('Fetching exercises failed, please try again later.', undefined, 3000);
+                    this.exercisesChanged$.next([]);
+                }
             }));
+
     }
 
+
+    
 
     getCompletedOrCancelledExercises(): Observable<Exercise[]> {
         return this.finishedExercisesChanged$.asObservable();
@@ -53,7 +64,7 @@ export class TrainingService {
             date: new Date(), 
             state: 'completed' 
         });
-        this.exerciseChanged$.next(this.runningExercise);
+        this.exerciseChanged$.next(null);
     }
 
     cancelExercise(progress: number) {
@@ -64,6 +75,8 @@ export class TrainingService {
             date: new Date(), 
             state: 'cancelled' 
         });
+
+        this.exerciseChanged$.next(null);
     }
 
     getRunningExercise(): Exercise | null{

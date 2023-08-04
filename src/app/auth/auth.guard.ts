@@ -1,16 +1,8 @@
-import { Router } from "@angular/router";
-import { AuthService } from "./auth.service";
 import { inject } from "@angular/core";
+import { Store } from "@ngrx/store";
+import * as fromRoot from "../app.reducer";
 
 export const isUserLoggedInGuard = () => {
-    const authService: AuthService = inject(AuthService);
-    const router = inject(Router);
-
-    return authService.isUserAuthenticated().subscribe(isAuthenticated => {
-        if(!isAuthenticated) {
-            router.navigate(['login']);
-            return false;
-        }
-        return true;
-    });
+    const authService: any = inject(Store<fromRoot.State>);
+    return authService.select(fromRoot.getIsAuth);
 }

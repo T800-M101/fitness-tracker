@@ -2,7 +2,6 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { StopTrainingComponent } from './training/current-training/stop-training.component ';
 
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -23,6 +22,8 @@ import { AuthService } from './auth/auth.service';
 import { UIService } from './shared/ui.service';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { TrainingRoutingModule } from './training/training-routing.module';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './app.reducer';
 
 
 
@@ -34,6 +35,7 @@ import { TrainingRoutingModule } from './training/training-routing.module';
     SidenavListComponent,
   ],
   imports: [
+    TrainingRoutingModule ,
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
@@ -41,7 +43,8 @@ import { TrainingRoutingModule } from './training/training-routing.module';
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    StoreModule.forRoot(reducers),
  
   ],
   providers: [
@@ -50,6 +53,6 @@ import { TrainingRoutingModule } from './training/training-routing.module';
     UIService
   ],
   bootstrap: [AppComponent],
-  entryComponents: [StopTrainingComponent]
+  
 })
 export class AppModule { }
